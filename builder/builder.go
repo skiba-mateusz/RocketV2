@@ -277,8 +277,15 @@ func (b *Builder) renderPaginated(node *Node) error {
 	totalItems := len(node.Children)
 	totalPages := (totalItems + pageSize - 1) / pageSize
 
+	pages := make([]int, totalPages)
+	for p := range totalPages {
+		pages[p] = p + 1
+	}
+
+	outPath := node.OutPath
+
 	for i := range totalPages {
-		start := totalPages * i
+		start := pageSize * i
 		end := start + pageSize
 		if end > totalItems {
 			end = totalItems
@@ -287,14 +294,9 @@ func (b *Builder) renderPaginated(node *Node) error {
 		page := i + 1
 		items := node.Children[start:end]
 
+		outPathPage := outPath 
 		if page > 1 {
-			node.OutPath = filepath.Join(filepath.Dir(node.OutPath), "page", fmt.Sprint(page), "index.html")
-		}
-
-		pages := []int{}
-
-		for j := 1; j <= totalPages; j++ {
-			pages = append(pages, j)
+			outPathPage = filepath.Join(filepath.Dir(outPath), "page", fmt.Sprint(page), "index.html")
 		}
 
 		data := struct {
@@ -321,7 +323,9 @@ func (b *Builder) renderPaginated(node *Node) error {
 			node,
 		}
 
-		if err := b.render(node, data); err != nil {
+		tmp := *node
+		tmp.OutPath = outPathPage
+		if err := b.render(&tmp, data); err != nil {
 			return fmt.Errorf("failed to render: %v", err)
 		}
 	}
