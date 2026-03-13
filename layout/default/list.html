@@ -1,0 +1,17 @@
+{{ define "page" }}
+    <section>
+        <h1>{{ .Page.Meta.Title }}</h1>
+        <ul>
+            {{ range .Items }}
+                <li>
+                    <a href="{{ .Permalink }}">
+                        <article>
+                            <h2>{{ .Page.Meta.Title }}</h2>
+                        </article>
+                    </a>
+                </li>
+            {{ end }}
+        </ul>
+    </section>
+    {{ template "pagination" . }}
+{{ end }}
