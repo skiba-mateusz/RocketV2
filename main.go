@@ -10,6 +10,7 @@ import (
 	"github.com/skiba-mateusz/RocketV2/config"
 	"github.com/skiba-mateusz/RocketV2/logger"
 	"github.com/skiba-mateusz/RocketV2/parser"
+	"github.com/skiba-mateusz/RocketV2/server"
 	"github.com/skiba-mateusz/RocketV2/templater"
 )
 
@@ -33,6 +34,13 @@ func main() {
 
 	bldr := builder.NewBuilder(logger, config, metadataParser, goTemplater)
 	if err := bldr.Build(ctx); err != nil {
+		handleError(err, logger)
+	}
+
+	srv := server.New(logger, config, ":8000")
+
+	
+	if err := srv.Run(ctx); err != nil {
 		handleError(err, logger)
 	}
 }
