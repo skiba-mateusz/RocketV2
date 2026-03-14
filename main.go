@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/skiba-mateusz/RocketV2/builder"
+	"github.com/skiba-mateusz/RocketV2/cmd"
 	"github.com/skiba-mateusz/RocketV2/config"
 	"github.com/skiba-mateusz/RocketV2/logger"
 	"github.com/skiba-mateusz/RocketV2/parser"
@@ -16,6 +18,10 @@ import (
 
 
 func main() {
+	if err := cmd.Execute(); err != nil {
+		fmt.Println(err)
+	}
+	
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
@@ -37,12 +43,11 @@ func main() {
 		handleError(err, logger)
 	}
 
-	srv := server.New(logger, config, ":8000")
+	_ = server.New(logger, config, ":8000")
 
-	
-	if err := srv.Run(ctx); err != nil {
-		handleError(err, logger)
-	}
+	// if err := srv.Run(ctx); err != nil {
+	// 	handleError(err, logger)
+	// }
 }
 
 func handleError(err error, logger *logger.Logger) {
