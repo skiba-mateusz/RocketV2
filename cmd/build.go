@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"context"
 
 	"github.com/skiba-mateusz/RocketV2/commandeer"
 )
@@ -9,12 +9,8 @@ import (
 var buildCmd = commandeer.NewCommand(
 	"build",
 	"Build static site",
-	func(cmd *commandeer.Command, args []string) error {
-		fmt.Println("build")
-		fmt.Println(cmd.Flags.GetInt("threads"))
-		fmt.Println(cmd.Flags.GetBool("verbose"))
-		fmt.Println(args)
-		return nil
+	func(ctx context.Context, cmd *commandeer.Command, args []string) error {
+		return app.Builder.Build(ctx)
 	},
 )
 

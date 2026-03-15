@@ -1,13 +1,14 @@
 package commandeer
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io"
 	"os"
 )
 
-type CommandFunc func(cmd *Command, args []string) error
+type CommandFunc func(ctx context.Context, cmd *Command, args []string) error
 
 type Command struct {
 	Name        string
@@ -40,9 +41,9 @@ func (c *Command) Add(cmd *Command) error {
 	return nil
 }
 
-func (c *Command) Execute() error {
+func (c *Command) Execute(ctx context.Context) error {
 	args := os.Args[1:]
-	return c.execute(args)
+	return c.execute(ctx, args)
 }
 
 func (c *Command) Help() {	
@@ -74,10 +75,10 @@ func (c *Command) printHelp(w io.Writer) {
 	}
 }
 
-func (c *Command) execute(args []string) error {
+func (c *Command) execute(ctx context.Context, args []string) error {
 	if len(args) == 0 {
 		if c.run != nil {
-			return c.run(c, nil)
+			return c.run(ctx, c, nil)
 		}
 		return nil
 	}
@@ -90,7 +91,7 @@ func (c *Command) execute(args []string) error {
 	}
 
 	if sub, ok := c.subCommands[next]; ok {
-		return sub.execute(args[1:])
+		return sub.execute(ctx, args[1:])
 	}
 
 	if c.run != nil {
@@ -113,7 +114,7 @@ func (c *Command) execute(args []string) error {
 			return fmt.Errorf("failed to parse flags: %v", err)
 		}
 
-		return c.run(c, restArgs)
+		return c.run(ctx, c, restArgs)
 	}
 
 	if len(next) > 0 && next[0] == '-' {
