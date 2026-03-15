@@ -16,7 +16,7 @@ type Server struct {
 	server *http.Server
 }
 
-func New(logger *logger.Logger, config *config.Config, listenAddr string) *Server {
+func New(logger *logger.Logger, config *config.Config, port string) *Server {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir(config.BuildDir)))
 
@@ -24,7 +24,7 @@ func New(logger *logger.Logger, config *config.Config, listenAddr string) *Serve
 		logger: logger,
 		config: config,
 		server: &http.Server{
-			Addr:    listenAddr,
+			Addr:    fmt.Sprintf(":%s", port),
 			Handler: mux,
 		},
 	}

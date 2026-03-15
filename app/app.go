@@ -5,12 +5,13 @@ import (
 	"github.com/skiba-mateusz/RocketV2/config"
 	"github.com/skiba-mateusz/RocketV2/logger"
 	"github.com/skiba-mateusz/RocketV2/parser"
+	"github.com/skiba-mateusz/RocketV2/server"
 	"github.com/skiba-mateusz/RocketV2/templater"
 )
 
 type App struct {
-	Logger *logger.Logger
-	Config *config.Config
+	Logger 	*logger.Logger
+	Config 	*config.Config
 	Builder *builder.Builder
 }
 
@@ -34,4 +35,8 @@ func New() (*App, error) {
 		Config: config,
 		Builder: builder.NewBuilder(logger, config, parser, templater),
 	}, nil
+}
+
+func (a *App) NewServer(port string) *server.Server {
+	return server.New(a.Logger, a.Config, port)
 }
