@@ -145,6 +145,9 @@ func (b *Builder) processContent(ctx context.Context) error {
 		
 		g.Go(func() error {
 			if ctx.Err() != nil {
+				if ctx.Err() == context.Canceled {
+					return nil
+				}
 				return ctx.Err()
 			}
 
@@ -221,6 +224,9 @@ func (b *Builder) build(ctx context.Context) error {
 
 		g.Go(func() error {
 			if ctx.Err() != nil {
+				if ctx.Err() == context.Canceled {
+					return nil
+				}
 				return ctx.Err()
 			}	
 
