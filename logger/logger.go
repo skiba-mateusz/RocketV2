@@ -21,9 +21,10 @@ const (
 type Logger struct {
 	logger *log.Logger
 	colorFuncs map[LogLevel]func(a ...interface{}) string
+	verbose bool
 }
 
-func NewLogger() *Logger {
+func NewLogger(verbose bool) *Logger {
 	colorFuncs := map[LogLevel]func(a ...interface{}) string {
 		SUCCESS: color.New(color.FgGreen).SprintFunc(),
 		INFO: color.New(color.FgBlue).SprintFunc(),
@@ -35,6 +36,7 @@ func NewLogger() *Logger {
 	return &Logger{
 		logger: log.New(os.Stdout, "", 0),
 		colorFuncs: colorFuncs,
+		verbose: verbose,
 	}
 }
 
@@ -55,7 +57,9 @@ func (l *Logger) Error(message string, args ...interface{}) {
 }
 
 func (l *Logger) Debug(message string, args ...interface{}) {
-	l.logMessage(DEBUG, "DEBUG", message, args...)
+	if l.verbose {
+		l.logMessage(DEBUG, "DEBUG", message, args...)
+	}
 } 
 
 func (l *Logger) logMessage(level LogLevel, levelStr, message string, args ...interface{}) {

@@ -242,7 +242,7 @@ func (b *Builder) build(ctx context.Context) error {
 }
 
 func (b *Builder) renderNode(node *Node) error {
-	b.logger.Info("Rendering page %s -> %s", node.SourcePath, node.OutPath)
+	b.logger.Debug("Rendering page %s -> %s", node.SourcePath, node.OutPath)
 
 	var err error
 
