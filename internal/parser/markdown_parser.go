@@ -26,7 +26,7 @@ type Page struct {
 
 type MarkdownParser struct{}
 
-func NewMarkdwonParser() *MarkdownParser {
+func NewMarkdownParser() *MarkdownParser {
 	return &MarkdownParser{}
 }
 

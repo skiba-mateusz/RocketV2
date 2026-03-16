@@ -43,7 +43,7 @@ func newApp(cmd *commandeer.Command) (*app, error) {
 		return nil, fmt.Errorf("failed to load config: %v", err)
 	}
 
-	prs := parser.NewMarkdwonParser()
+	prs := parser.NewMarkdownParser()
 	tmpl, err := templater.NewGoTemplater(cfg)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create templater: %v", err)
