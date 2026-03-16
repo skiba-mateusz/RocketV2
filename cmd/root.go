@@ -7,12 +7,12 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/skiba-mateusz/RocketV2/internal/config"
 	"github.com/skiba-mateusz/RocketV2/internal/builder"
+	"github.com/skiba-mateusz/RocketV2/internal/config"
 	"github.com/skiba-mateusz/RocketV2/internal/parser"
 	"github.com/skiba-mateusz/RocketV2/internal/templater"
-	"github.com/skiba-mateusz/RocketV2/pkg/logger"
 	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
+	"github.com/skiba-mateusz/RocketV2/pkg/logger"
 )
 
 type app struct {
@@ -37,7 +37,7 @@ func Execute() error {
 }
 
 func newApp(cmd *commandeer.Command) (*app, error) {
-	log := logger.NewLogger(cmd.Flags.GetBool("verbose"))
+	log := logger.New(cmd.Flags.GetBool("verbose"))
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load config: %v", err)
@@ -49,7 +49,7 @@ func newApp(cmd *commandeer.Command) (*app, error) {
 		return nil, fmt.Errorf("failed to create templater: %v", err)
 	}
 
-	builder := builder.NewBuilder(log, cfg, prs, tmpl)
+	builder := builder.New(log, cfg, prs, tmpl)
 
 	return &app{
 		logger: log,

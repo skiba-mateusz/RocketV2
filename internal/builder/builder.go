@@ -50,7 +50,7 @@ type Builder struct {
 	counter 		*atomic.Uint32
 }
 
-func NewBuilder(logger *logger.Logger, config *config.Config, pageParser parser.Parser, templater templater.Templater) *Builder {
+func New(logger *logger.Logger, config *config.Config, pageParser parser.Parser, templater templater.Templater) *Builder {
 	return &Builder{
 		logger: logger,
 		config: config,
