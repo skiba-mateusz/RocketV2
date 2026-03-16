@@ -14,10 +14,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/skiba-mateusz/RocketV2/config"
-	"github.com/skiba-mateusz/RocketV2/logger"
-	"github.com/skiba-mateusz/RocketV2/parser"
-	"github.com/skiba-mateusz/RocketV2/templater"
+	"github.com/skiba-mateusz/RocketV2/internal/config"
+	"github.com/skiba-mateusz/RocketV2/internal/parser"
+	"github.com/skiba-mateusz/RocketV2/internal/templater"
+	"github.com/skiba-mateusz/RocketV2/pkg/logger"
 	"golang.org/x/sync/errgroup"
 )
 

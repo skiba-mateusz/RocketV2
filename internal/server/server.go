@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/skiba-mateusz/RocketV2/config"
-	"github.com/skiba-mateusz/RocketV2/logger"
+	"github.com/skiba-mateusz/RocketV2/internal/config"
+	"github.com/skiba-mateusz/RocketV2/pkg/logger"
 )
 
 type Server struct {

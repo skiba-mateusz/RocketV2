@@ -7,12 +7,12 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/skiba-mateusz/RocketV2/builder"
-	"github.com/skiba-mateusz/RocketV2/commandeer"
-	"github.com/skiba-mateusz/RocketV2/config"
-	"github.com/skiba-mateusz/RocketV2/logger"
-	"github.com/skiba-mateusz/RocketV2/parser"
-	"github.com/skiba-mateusz/RocketV2/templater"
+	"github.com/skiba-mateusz/RocketV2/internal/config"
+	"github.com/skiba-mateusz/RocketV2/internal/builder"
+	"github.com/skiba-mateusz/RocketV2/internal/parser"
+	"github.com/skiba-mateusz/RocketV2/internal/templater"
+	"github.com/skiba-mateusz/RocketV2/pkg/logger"
+	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
 )
 
 type app struct {

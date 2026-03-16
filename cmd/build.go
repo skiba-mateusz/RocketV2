@@ -3,7 +3,7 @@ package cmd
 import (
 	"context"
 
-	"github.com/skiba-mateusz/RocketV2/commandeer"
+	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
 )
 
 func newBuildCmd(getApp appInitFunc) *commandeer.Command {

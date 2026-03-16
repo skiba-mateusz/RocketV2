@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/skiba-mateusz/RocketV2/config"
+	"github.com/skiba-mateusz/RocketV2/internal/config"
 )
 
 type GoTemplater struct{

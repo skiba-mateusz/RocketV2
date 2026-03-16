@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 
-	"github.com/skiba-mateusz/RocketV2/commandeer"
-	"github.com/skiba-mateusz/RocketV2/server"
+	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
+	"github.com/skiba-mateusz/RocketV2/internal/server"
 )
 
 func newServeCmd(getApp appInitFunc) *commandeer.Command {
