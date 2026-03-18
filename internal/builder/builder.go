@@ -40,7 +40,11 @@ type Node struct {
 	IsDir 		 bool	
 }
 
-type Builder struct {
+type Builder interface {
+	Build(ctx context.Context) error
+}
+
+type DefaultBuilder struct {
 	logger 			*logger.Logger
 	config 			*config.Config
 	pageParser 		parser.Parser
@@ -50,8 +54,8 @@ type Builder struct {
 	counter 		*atomic.Uint32
 }
 
-func New(logger *logger.Logger, config *config.Config, pageParser parser.Parser, templater templater.Templater) *Builder {
-	return &Builder{
+func NewDefault(logger *logger.Logger, config *config.Config, pageParser parser.Parser, templater templater.Templater) *DefaultBuilder {
+	return &DefaultBuilder{
 		logger: logger,
 		config: config,
 		pageParser: pageParser,
@@ -62,7 +66,7 @@ func New(logger *logger.Logger, config *config.Config, pageParser parser.Parser,
 	}
 }
 
-func (b *Builder) Build(ctx context.Context) error {
+func (b *DefaultBuilder) Build(ctx context.Context) error {
 	start := time.Now()
 
 	b.logger.Info("Starting build process...")
@@ -91,7 +95,7 @@ func (b *Builder) Build(ctx context.Context) error {
 	return nil
 }
 
-func (b *Builder) prepareNodes() error {
+func (b *DefaultBuilder) prepareNodes() error {
 	b.logger.Info("Preparing nodes...")
 
 	return filepath.WalkDir(b.config.ContentDir, func(path string, d fs.DirEntry, err error) error {
@@ -131,7 +135,7 @@ func (b *Builder) prepareNodes() error {
 	})
 }
 
-func (b *Builder) processContent(ctx context.Context) error {
+func (b *DefaultBuilder) processContent(ctx context.Context) error {
 	b.logger.Info("Processing content...")
 
 	g, ctx := errgroup.WithContext(ctx)
@@ -162,7 +166,7 @@ func (b *Builder) processContent(ctx context.Context) error {
 	return g.Wait()
 }
 
-func (b *Builder) loadContent(node *Node) error {
+func (b *DefaultBuilder) loadContent(node *Node) error {
 	file, err := os.Open(node.SourcePath)
 	if err != nil {
 		return fmt.Errorf("failed to open %s: %v", node.SourcePath, err)
@@ -178,7 +182,7 @@ func (b *Builder) loadContent(node *Node) error {
 	return b.populateNode(node)
 }
 
-func (b *Builder) populateNode(node *Node) error {
+func (b *DefaultBuilder) populateNode(node *Node) error {
     relPath, err := filepath.Rel(b.config.ContentDir, node.SourcePath)
     if err != nil {
         return err
@@ -212,7 +216,7 @@ func (b *Builder) populateNode(node *Node) error {
 	return nil
 }
 
-func (b *Builder) build(ctx context.Context) error {
+func (b *DefaultBuilder) build(ctx context.Context) error {
 	g, ctx := errgroup.WithContext(ctx)
 	g.SetLimit(runtime.NumCPU())
 
@@ -241,7 +245,7 @@ func (b *Builder) build(ctx context.Context) error {
 	return g.Wait()
 }
 
-func (b *Builder) renderNode(node *Node) error {
+func (b *DefaultBuilder) renderNode(node *Node) error {
 	b.logger.Debug("Rendering page %s -> %s", node.SourcePath, node.OutPath)
 
 	var err error
@@ -259,7 +263,7 @@ func (b *Builder) renderNode(node *Node) error {
 	return err
 }
 
-func (b *Builder) renderSingle(node *Node) error {
+func (b *DefaultBuilder) renderSingle(node *Node) error {
 
 	data := struct {
 		Config  *config.Config
@@ -274,7 +278,7 @@ func (b *Builder) renderSingle(node *Node) error {
 	return b.render(node, data)
 }
 
-func (b *Builder) renderPaginated(node *Node) error {
+func (b *DefaultBuilder) renderPaginated(node *Node) error {
 	pageSize := b.config.Paginate
 	if pageSize <= 0 {
 		pageSize = 5
@@ -339,7 +343,7 @@ func (b *Builder) renderPaginated(node *Node) error {
 	return nil
 }
 
-func (b *Builder) render(node *Node, data any) error {
+func (b *DefaultBuilder) render(node *Node, data any) error {
 	if err := os.MkdirAll(filepath.Dir(node.OutPath), 0755); err != nil {
 		return fmt.Errorf("failed to create dir %s: %v", filepath.Dir(node.OutPath), err)
 	}
@@ -358,7 +362,7 @@ func (b *Builder) render(node *Node, data any) error {
 	return b.templater.Render(file, "baseof.html", data, []string{filepath.Join(b.config.LayoutDir, node.Section, layout)})
 }
 
-func (b *Builder) sortNodes() {
+func (b *DefaultBuilder) sortNodes() {
 	for _, node := range b.nodes {
 		if len(node.Children) > 1 {
 			sort.Slice(node.Children, func(i, j int) bool {
@@ -386,7 +390,7 @@ func (b *Builder) sortNodes() {
 	}
 }
 
-func (b *Builder) cleanBuildDir() error {
+func (b *DefaultBuilder) cleanBuildDir() error {
 	b.logger.Info("Cleaning build directory...")
 
 	if _, err := os.Stat(b.config.BuildDir); os.IsNotExist(err) {

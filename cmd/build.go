@@ -6,7 +6,7 @@ import (
 	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
 )
 
-func newBuildCmd(getApp appInitFunc) *commandeer.Command {
+func newBuildCmd(getApp getAppFunc) *commandeer.Command {
 	buildCmd := commandeer.NewCommand(
 		"build",
 		"Build static site",
@@ -16,7 +16,7 @@ func newBuildCmd(getApp appInitFunc) *commandeer.Command {
 				return err
 			}
 
-			return app.builder.Build(ctx)
+			return app.Builder().Build(ctx)
 		},
 	)
 

@@ -10,17 +10,21 @@ import (
 	"github.com/skiba-mateusz/RocketV2/pkg/logger"
 )
 
-type Server struct {
+type Server interface {
+	Run(ctx context.Context) error
+}
+
+type DefaultServer struct {
 	logger *logger.Logger
 	config *config.Config
 	server *http.Server
 }
 
-func New(logger *logger.Logger, config *config.Config, port string) *Server {
+func NewDefault(logger *logger.Logger, config *config.Config, port string) *DefaultServer {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir(config.BuildDir)))
 
-	return &Server{
+	return &DefaultServer{
 		logger: logger,
 		config: config,
 		server: &http.Server{
@@ -30,7 +34,7 @@ func New(logger *logger.Logger, config *config.Config, port string) *Server {
 	}
 }
 
-func (s *Server) Run(ctx context.Context) error {
+func (s *DefaultServer) Run(ctx context.Context) error {
 	s.logger.Info("Server is listening on http://localhost%s", s.server.Addr)
 
 	errChan := make(chan error, 1)
@@ -49,7 +53,7 @@ func (s *Server) Run(ctx context.Context) error {
 	}
 }
 
-func (s *Server) Shutdown() error {
+func (s *DefaultServer) Shutdown() error {
 	s.logger.Info("Shutting down server...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)

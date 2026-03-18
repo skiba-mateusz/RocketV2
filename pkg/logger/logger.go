@@ -24,7 +24,7 @@ type Logger struct {
 	verbose bool
 }
 
-func New(verbose bool) *Logger {
+func NewDefault(verbose bool) *Logger {
 	colorFuncs := map[LogLevel]func(a ...interface{}) string {
 		SUCCESS: color.New(color.FgGreen).SprintFunc(),
 		INFO: color.New(color.FgBlue).SprintFunc(),

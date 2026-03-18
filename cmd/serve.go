@@ -4,10 +4,9 @@ import (
 	"context"
 
 	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
-	"github.com/skiba-mateusz/RocketV2/internal/server"
 )
 
-func newServeCmd(getApp appInitFunc) *commandeer.Command {
+func newServeCmd(getApp getAppFunc) *commandeer.Command {
 	serveCmd := commandeer.NewCommand(
 		"serve",
 		"Start development server",
@@ -17,17 +16,11 @@ func newServeCmd(getApp appInitFunc) *commandeer.Command {
 				return err
 			}
 
-			if err := app.builder.Build(ctx); err != nil {
+			if err := app.Builder().Build(ctx); err != nil {
 				return err
 			}
 
-			srv := server.New(app.logger, app.config, cmd.Flags.GetString("port"))
-
-			if err = srv.Run(ctx); err != nil {
-				return err
-			} 
-
-			return nil
+			return app.Server(cmd.Flags.GetString("port")).Run(ctx)
 		},
 	)
 
