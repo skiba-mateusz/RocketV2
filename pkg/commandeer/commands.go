@@ -46,6 +46,10 @@ func (c *Command) Execute(ctx context.Context) error {
 	return c.execute(ctx, args)
 }
 
+func (c *Command) ExecuteArgs(ctx context.Context, args []string) error {
+	return c.execute(ctx, args)
+}
+
 func (c *Command) Help() {	
 	c.printHelp(os.Stdout)
 }
