@@ -1,0 +1,23 @@
+{{ define "pagination" }}
+  <div>
+    {{ if .HasPrevPage }}
+      <a href="{{ if eq .CurrentPage 2}}/{{ .Section }}{{ else }}/{{ .Section }}/page/{{ sub .CurrentPage 1 }}/{{end}}">Prev</a>
+    {{ end }}
+    <div>
+      {{ range .Pages }}
+        {{ if eq . $.CurrentPage }}
+          <strong>{{ . }}</strong>
+        {{ else }}
+          {{ if eq $.CurrentPage 2 }}
+            <a href="/{{ $.Section }}">{{ . }}</a>
+          {{ else }}
+            <a href="/{{ $.Section }}/page/{{ . }}">{{ . }}</a>
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    </div>
+    {{ if .HasNextPage }}
+      <a href="/{{ .Section }}/page/{{ add .CurrentPage 1 }}">Next</a>
+    {{ end }}
+  </div>
+{{ end }}

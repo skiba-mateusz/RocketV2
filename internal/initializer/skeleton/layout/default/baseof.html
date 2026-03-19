@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="{{ .Config.LanguageCode }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ .Config.Title }} | {{ .Page.Meta.Title }}</title>
+    <meta name="description" content="{{ .Config.Params.Description }}" />
+    <meta name="author" content="{{ .Config.Params.Author }}" />
+  </head>
+  <body>
+    {{ template "header" . }}
+    <main>
+      {{ block "page" . }}{{ end }}
+    </main>
+    {{ template "footer" . }}
+  </body>
+</html>

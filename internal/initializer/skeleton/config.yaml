@@ -1,0 +1,13 @@
+baseURL: "https://example.com"
+languageCode: "en"
+title: "RocketV2"
+
+contentDir: "content"
+layoutDir: "layout"
+buildDir: "build"
+
+paginate: 2
+
+params:
+  Author: "John Doe"
+  Description: "RocketV2 is a static site generator written in Go. It allows you to build your static site with Go templates and Markdown content."

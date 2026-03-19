@@ -1,0 +1,11 @@
+{{ define "nav" }}
+  <nav>
+    <ul>
+      {{ range .Root.Children }}
+        <li>
+          <a href="{{ .Permalink }}">{{ .Page.Meta.Title }}</a>
+        </li>
+      {{ end }}
+    </ul>
+  </nav>
+{{ end }}
