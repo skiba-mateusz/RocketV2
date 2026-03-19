@@ -11,6 +11,10 @@ func newServeCmd(getApp getAppFunc) *commandeer.Command {
 		"serve",
 		"Start development server",
 		func(ctx context.Context, cmd *commandeer.Command, args []string) error {
+			if err := assertProjectRoot(); err != nil {
+				return err
+			}
+
 			app, err := getApp(cmd)
 			if err != nil {
 				return err
