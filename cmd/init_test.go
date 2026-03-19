@@ -1,6 +1,8 @@
 package cmd
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestInit_InvalidName(t *testing.T) {
 	cases := []string{"", ".", "..", "../..", "/"}

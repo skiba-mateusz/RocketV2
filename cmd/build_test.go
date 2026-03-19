@@ -2,13 +2,26 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/skiba-mateusz/RocketV2/internal/app"
 	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
 )
 
+
+
 func TestBuildCmd_Success(t *testing.T) {
+	tmp := t.TempDir()
+	original, _ := os.Getwd()
+	os.Chdir(tmp)
+	defer os.Chdir(original)
+
+	if err := os.WriteFile(filepath.Join(tmp, "config.yaml"), []byte{}, 0644); err != nil {
+		t.Fatalf("failed to create config file: %v", err)
+	}
+
 	var getApp getAppFunc
 	getApp = func(cmd *commandeer.Command) (*app.App, error) {
 		return &app.App{

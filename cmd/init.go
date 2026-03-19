@@ -7,6 +7,7 @@ import (
 
 	"github.com/skiba-mateusz/RocketV2/internal/initializer"
 	"github.com/skiba-mateusz/RocketV2/pkg/commandeer"
+	"github.com/skiba-mateusz/RocketV2/pkg/logger"
 )
 
 func newInitCmd() *commandeer.Command {
@@ -23,6 +24,10 @@ func newInitCmd() *commandeer.Command {
 			if clean == "." || clean == ".." {
 				return fmt.Errorf("invalid project name: %s", name)
 			}
+
+			logger := logger.NewDefault(false)
+
+			logger.Info("%s create successfully, try 'cd %s'", name, name)
 
 			return initializer.Initialize(name)
 		},
