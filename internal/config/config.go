@@ -15,6 +15,7 @@ type Config struct {
 	ContentDir   string					`yaml:"contentDir"`
 	LayoutDir    string					`yaml:"layoutDir"`
 	BuildDir     string					`yaml:"buildDir"`
+	StaticDir	 string					`yaml:"staticDir"`
 	Paginate	 int					`yaml:"paginate"`
 	Params       map[string]interface{} `yaml:"params"`
 }
@@ -32,6 +33,7 @@ func Load() (*Config, error) {
 		ContentDir: "content",
 		LayoutDir:  "layout",
 		BuildDir: 	"build",
+		StaticDir:  "static",
 	}
 	
 	err = yaml.Unmarshal(data, &cfg)

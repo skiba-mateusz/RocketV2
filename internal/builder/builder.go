@@ -89,6 +89,10 @@ func (b *DefaultBuilder) Build(ctx context.Context) error {
 		return err
 	}
 
+	if err := b.copyStaticAssets(); err != nil {
+		return err
+	}
+
 	elapsed := time.Since(start)
 	b.logger.Success("Build completed in %.2f, Total pages: %d", elapsed.Seconds(), b.counter.Load())
 
@@ -404,3 +408,40 @@ func (b *DefaultBuilder) cleanBuildDir() error {
 	return nil
 }
 
+func (b *DefaultBuilder) copyStaticAssets() error {
+	b.logger.Info("Copying static assets...")
+
+	wd, _ := os.Getwd()
+	source := filepath.Join(wd, b.config.StaticDir)
+	destRoot := filepath.Join(wd, b.config.BuildDir, "static")
+
+	return filepath.WalkDir(source, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return  err
+		}
+
+		rel, _ := filepath.Rel(source, path)
+		dest := filepath.Join(destRoot, rel)
+
+		if d.IsDir() {
+			if err := os.MkdirAll(dest, 0755); err != nil {
+				return fmt.Errorf("failed to create dir %s: %v", dest, err)
+			}
+			return nil
+		} 
+
+		if err := os.MkdirAll(filepath.Dir(dest), 0755); err != nil {
+			return fmt.Errorf("failed to create dir %s: %v", filepath.Dir(dest), err)
+		}
+
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return fmt.Errorf("failed to read file %s: %v", path, err)
+		}
+		if err := os.WriteFile(dest, content, 0644); err != nil {
+			return fmt.Errorf("failed to write file %s: %v", dest, err)
+		}
+
+		return nil
+	})
+}
