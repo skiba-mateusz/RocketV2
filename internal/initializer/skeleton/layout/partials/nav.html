@@ -1,9 +1,9 @@
 {{ define "nav" }}
-  <nav>
-    <ul>
+  <nav class="nav">
+    <ul class="nav__list">
       {{ range .Root.Children }}
-        <li>
-          <a href="{{ .Permalink }}">{{ .Page.Meta.Title }}</a>
+        <li class="nav__item">
+          <a href="{{ .Permalink }}" class="nav__link">{{ .Page.Meta.Title }}</a>
         </li>
       {{ end }}
     </ul>

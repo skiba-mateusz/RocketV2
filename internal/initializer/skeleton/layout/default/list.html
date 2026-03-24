@@ -1,17 +1,32 @@
 {{ define "page" }}
     <section>
-        <h1>{{ .Page.Meta.Title }}</h1>
-        <ul>
-            {{ range .Items }}
-                <li>
-                    <a href="{{ .Permalink }}">
-                        <article>
-                            <h2>{{ .Page.Meta.Title }}</h2>
+        <div class="container container--narrow flow">
+            <h1 class="heading">{{ .Page.Meta.Title }}</h1>
+            <ul class="blog-list">
+                {{ range .Items }}
+                    <li class="blog-list__item">
+                        <article class="blog-preview">
+                            <div class="blog-preview__inner">
+                                <a href="{{ .Permalink }}" class="blog-preview__link">
+                                    <h2 class="blog-preview__title">{{ .Page.Meta.Title }}</h2>
+                                </a>
+                                <div class="blog-preview__tags">
+                                    {{ range .Page.Meta.Tags }}
+                                        <span class="tag">{{ . }}</span>
+                                    {{ end }}
+                                </div>
+                                <div class="blog-preview__content">
+                                    {{ preview .Page.Content }}
+                                </div>
+                            </div>
+                            <div class="blog-preview__thumbnail-wrapper">
+                                <img src="/static/images/{{ base .Permalink }}/thumbnail.png" alt="{{ .Page.Meta.Title }} thumbnail" class="blog-preview__thumbnail">
+                            </div>
                         </article>
-                    </a>
-                </li>
-            {{ end }}
-        </ul>
+                    </li>
+                {{ end }}
+            </ul>
+        </div>
     </section>
     {{ template "pagination" . }}
 {{ end }}

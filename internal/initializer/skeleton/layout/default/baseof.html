@@ -6,6 +6,8 @@
     <title>{{ .Config.Title }} | {{ .Page.Meta.Title }}</title>
     <meta name="description" content="{{ .Config.Params.Description }}" />
     <meta name="author" content="{{ .Config.Params.Author }}" />
+    <link rel="stylesheet" href="/static/styles/styles.css" />
+    <script src="/static/js/script.js" defer></script>
   </head>
   <body>
     {{ template "header" . }}

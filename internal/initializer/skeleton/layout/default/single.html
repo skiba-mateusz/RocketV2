@@ -1,8 +1,11 @@
-{{ define "page" }} 
-    <section>
-        <h1>{{ .Page.Meta.Title }}</h1>
-        <div>
-            {{ .Page.Content }}
-        </div> 
+{{ define "page" }}
+    <section class="hero">
+        <div class="container container--narrow">
+            <p class="hero__label">{{ .Config.Title }}</p>
+            <h1 class="hero__title">{{ .Page.Meta.Title }}</h1>
+            <div class="hero__body flow">
+                {{ .Page.Content }}
+            </div>
+        </div>
     </section>
 {{ end }}

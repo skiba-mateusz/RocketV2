@@ -6,7 +6,7 @@ contentDir: "content"
 layoutDir: "layout"
 buildDir: "build"
 
-paginate: 2
+paginate: 3
 
 params:
   Author: "John Doe"

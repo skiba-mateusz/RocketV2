@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -26,6 +27,12 @@ func NewGoTemplater(config *config.Config) (*GoTemplater, error) {
 		},
 		"sub": func(a, b int) int {
 			return a - b
+		},
+		"base": func(p template.URL) string {
+			return path.Base(string(p))
+		},
+		"preview": func(p template.HTML) template.HTML {
+			return template.HTML(string(p)[:200] + "...")
 		},
 	}
 

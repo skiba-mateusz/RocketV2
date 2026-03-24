@@ -1,23 +1,29 @@
 {{ define "pagination" }}
-  <div>
-    {{ if .HasPrevPage }}
-      <a href="{{ if eq .CurrentPage 2}}/{{ .Section }}{{ else }}/{{ .Section }}/page/{{ sub .CurrentPage 1 }}/{{end}}">Prev</a>
-    {{ end }}
-    <div>
-      {{ range .Pages }}
-        {{ if eq . $.CurrentPage }}
-          <strong>{{ . }}</strong>
+  <div class="pagination">
+    <div class="container">
+      {{ if .HasPrevPage }}
+        {{ if eq .CurrentPage 2 }}
+          <a href="/{{ .Section }}/" class="pagination__prev">Prev</a>
         {{ else }}
-          {{ if eq $.CurrentPage 2 }}
-            <a href="/{{ $.Section }}">{{ . }}</a>
-          {{ else }}
-            <a href="/{{ $.Section }}/page/{{ . }}">{{ . }}</a>
-          {{ end }}
+          <a href="/{{ .Section }}/page/{{ sub .CurrentPage 1 }}/" class="pagination__prev">Prev</a>
         {{ end }}
       {{ end }}
+      <div>
+        {{ range .Pages }}
+          {{ if eq . $.CurrentPage }}
+            <strong class="pagination__current">{{ . }}</strong>
+          {{ else }}
+            {{ if eq . 1 }}
+              <a href="/{{ $.Section }}/" class="pagination__link">{{ . }}</a>
+            {{ else }}
+              <a href="/{{ $.Section }}/page/{{ . }}/" class="pagination__link">{{ . }}</a>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+      {{ if .HasNextPage }}
+        <a href="/{{ .Section }}/page/{{ add .CurrentPage 1 }}/" class="pagination__next">Next</a>
+      {{ end }}
     </div>
-    {{ if .HasNextPage }}
-      <a href="/{{ .Section }}/page/{{ add .CurrentPage 1 }}">Next</a>
-    {{ end }}
   </div>
 {{ end }}

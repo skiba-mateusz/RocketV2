@@ -1,0 +1,17 @@
+{{ define "page" }} 
+    <section>
+        <div class="container container--narrow flow">
+            <div class="flow">
+                <h1>{{ .Page.Meta.Title }}</h1>
+                <div>
+                    {{ range .Page.Meta.Tags }}
+                        <span class="tag">{{ . }}</span>
+                    {{ end }}
+                </div>
+            </div>
+            <div class="content flow">
+                {{ .Page.Content }}
+            </div>
+        </div>
+    </section>
+{{ end }}
