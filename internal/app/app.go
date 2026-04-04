@@ -50,9 +50,9 @@ func (a *App) Builder() builder.Builder {
 	return a.Bldr
 }
 
-func (a *App) Server(port string) server.Server {
+func (a *App) Server(port, cfgPath string) server.Server {
 	if a.Srv == nil {
-		a.Srv = server.NewDefault(a.Logger, a.Config, port)
+		a.Srv = server.NewDefault(a.Logger, a.Config, a.Builder(), port, cfgPath)
 	}
 	return a.Srv
 }

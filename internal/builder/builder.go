@@ -67,6 +67,8 @@ func NewDefault(logger *logger.Logger, config *config.Config, pageParser parser.
 }
 
 func (b *DefaultBuilder) Build(ctx context.Context) error {
+	b.reset()
+	
 	start := time.Now()
 
 	b.logger.Info("Starting build process...")
@@ -100,7 +102,7 @@ func (b *DefaultBuilder) Build(ctx context.Context) error {
 }
 
 func (b *DefaultBuilder) prepareNodes() error {
-	b.logger.Info("Preparing nodes...")
+	b.logger.Debug("Preparing nodes...")
 
 	return filepath.WalkDir(b.config.ContentDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -140,7 +142,7 @@ func (b *DefaultBuilder) prepareNodes() error {
 }
 
 func (b *DefaultBuilder) processContent(ctx context.Context) error {
-	b.logger.Info("Processing content...")
+	b.logger.Debug("Processing content...")
 
 	g, ctx := errgroup.WithContext(ctx)
 	g.SetLimit(runtime.NumCPU())
@@ -395,7 +397,7 @@ func (b *DefaultBuilder) sortNodes() {
 }
 
 func (b *DefaultBuilder) cleanBuildDir() error {
-	b.logger.Info("Cleaning build directory...")
+	b.logger.Debug("Cleaning build directory...")
 
 	if _, err := os.Stat(b.config.BuildDir); os.IsNotExist(err) {
 		return nil
@@ -409,7 +411,7 @@ func (b *DefaultBuilder) cleanBuildDir() error {
 }
 
 func (b *DefaultBuilder) copyStaticAssets() error {
-	b.logger.Info("Copying static assets...")
+	b.logger.Debug("Copying static assets...")
 
 	wd, _ := os.Getwd()
 	source := filepath.Join(wd, b.config.StaticDir)
@@ -444,4 +446,11 @@ func (b *DefaultBuilder) copyStaticAssets() error {
 
 		return nil
 	})
+}
+
+func (b *DefaultBuilder) reset() {
+	b.root = nil
+	b.nodes = make(map[string]*Node)
+	b.counter.Store(0)
+	b.templater.ClearCache()
 }

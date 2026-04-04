@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"io"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -21,47 +20,19 @@ type GoTemplater struct{
 }
 
 func NewGoTemplater(config *config.Config) (*GoTemplater, error) {
-	funcs := template.FuncMap{
-		"add": func(a, b int) int {
-			return a + b
-		},
-		"sub": func(a, b int) int {
-			return a - b
-		},
-		"base": func(p template.URL) string {
-			return path.Base(string(p))
-		},
-		"preview": func(p template.HTML) template.HTML {
-			return template.HTML(string(p)[:200] + "...")
-		},
+	templater := &GoTemplater{
+		config: config,
+		cache: make(map[string]*template.Template),
 	}
 
-	var files []string
-
-	patterns := []string{
-		filepath.Join(config.LayoutDir, "partials", "*.html"),
-		filepath.Join(config.LayoutDir, "default", "baseof.html"),
-	}
-
-	for _, p := range patterns {
-		matches, err := filepath.Glob(p)
-		if err != nil {
-			return nil, err
-		}
-		files = append(files, matches...)
-	}
-
-	base := template.New("base").Funcs(funcs)
-	base , err := base.ParseFiles(files...)
+	base , err := templater.loadDefaults()
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse templates: %v", err)
 	}
 
-	return &GoTemplater{
-		config: config,
-		base: base,
-		cache: make(map[string]*template.Template),
-	}, nil
+	templater.base = base
+
+	return templater, nil
 }
 
 func (t *GoTemplater) Render(w io.Writer, layout string, data any, templates []string) error {
@@ -106,4 +77,60 @@ func (t *GoTemplater) Render(w io.Writer, layout string, data any, templates []s
 	}
 
 	return nil
+}
+
+func (t *GoTemplater) ClearCache() error {
+	base, err := t.loadDefaults()
+	if err != nil {
+		t.mu.Unlock()
+		return fmt.Errorf("failed to load default templates: %v", err)
+	}
+	t.base = base
+
+	t.mu.Lock()
+	t.cache = make(map[string]*template.Template)
+	t.mu.Unlock()
+
+	return nil
+}
+
+func  (t *GoTemplater) loadDefaults() (*template.Template, error) {
+	funcs := template.FuncMap{
+		"add": func(a, b int) int {
+			return a + b
+		},
+		"sub": func(a, b int) int {
+			return a - b
+		},
+		"base": func(path template.URL) string {
+			return filepath.Base(string(path))
+		},
+		"preview": func(content template.HTML) template.HTML {
+			return template.HTML(string(content)[:200] + "...")
+		},
+	}
+
+	var files []string
+	patterns := []string{
+		filepath.Join(t.config.LayoutDir, "layout", "*.html"),
+		filepath.Join(t.config.LayoutDir, "default", "baseof.html"),
+		filepath.Join(t.config.LayoutDir, "partials", "*.html"),
+	}
+
+	for _, p := range patterns {
+		matches, err := filepath.Glob(p)
+		if err != nil {
+			return nil, err
+		}
+
+		files = append(files, matches...)
+	}
+
+	base := template.New("base").Funcs(funcs)
+	base, err := base.ParseFiles(files...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse files: %v", err)
+	}
+
+	return base, nil
 }
