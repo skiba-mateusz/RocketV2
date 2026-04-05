@@ -27,7 +27,7 @@ func newInitCmd() *commandeer.Command {
 
 			logger := logger.NewDefault(false)
 
-			logger.Info("%s create successfully, try 'cd %s'", name, name)
+			logger.Success("%s create successfully, try 'cd %s'", name, name)
 
 			return initializer.Initialize(name)
 		},

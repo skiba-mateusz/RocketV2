@@ -51,7 +51,7 @@ func NewCreateContentCmd() *commandeer.Command {
 				return err
 			}
 
-			logger.Info("%s created successfully", outPath)
+			logger.Success("%s created successfully", outPath)
 			
 			return nil
 		},

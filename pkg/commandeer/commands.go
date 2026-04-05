@@ -15,7 +15,7 @@ type Command struct {
 	Description string
 	Flags 		Flags
 	run         CommandFunc
-	subCommands map[string]*Command
+	subCommands []*Command
 }
 
 func NewCommand(name, description string, run CommandFunc) *Command {
@@ -29,14 +29,13 @@ func NewCommand(name, description string, run CommandFunc) *Command {
 }
 
 func (c *Command) Add(cmd *Command) error {
-	if c.subCommands == nil {
-		c.subCommands = make(map[string]*Command)
+	for _, sub := range c.subCommands {
+		if sub.Name == cmd.Name {
+			return fmt.Errorf("command %s already registered", cmd.Name)
+		}
 	}
 
-	if _, ok := c.subCommands[cmd.Name]; ok {
-		return fmt.Errorf("command %s already registered", cmd.Name)
-	}
-	c.subCommands[cmd.Name] = cmd
+	c.subCommands = append(c.subCommands, cmd)
 
 	return nil
 }
@@ -94,7 +93,7 @@ func (c *Command) execute(ctx context.Context, args []string) error {
 		return nil
 	}
 
-	if sub, ok := c.subCommands[next]; ok {
+	if sub := c.findSubCommand(next); sub != nil {
 		return sub.execute(ctx, args[1:])
 	}
 
@@ -126,4 +125,14 @@ func (c *Command) execute(ctx context.Context, args []string) error {
 	}
 
 	return fmt.Errorf("unknown command %s", next)
+}
+
+func (c *Command) findSubCommand(name string) *Command {
+	for _, sub := range c.subCommands {
+		if sub.Name == name {
+			return sub
+		}
+	}
+
+	return nil
 }

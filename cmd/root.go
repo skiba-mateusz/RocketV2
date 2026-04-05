@@ -43,9 +43,9 @@ func newRootCmd() *commandeer.Command {
 		return app, nil
 	}
 
-	rootCmd.Add(newBuildCmd(getApp))
-	rootCmd.Add(newServeCmd(getApp))
 	rootCmd.Add(newInitCmd())
+	rootCmd.Add(newServeCmd(getApp))
+	rootCmd.Add(newBuildCmd(getApp))
 	rootCmd.Add(NewContentCmd())
 
 	return rootCmd
