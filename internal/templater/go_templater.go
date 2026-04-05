@@ -106,6 +106,9 @@ func  (t *GoTemplater) loadDefaults() (*template.Template, error) {
 			return filepath.Base(string(path))
 		},
 		"preview": func(content template.HTML) template.HTML {
+			if len(content) <= 200 {
+				return content
+			}
 			return template.HTML(string(content)[:200] + "...")
 		},
 	}
