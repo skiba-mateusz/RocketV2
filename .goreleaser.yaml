@@ -40,10 +40,26 @@ archives:
 
 changelog:
   sort: asc
+  groups:
+    - title: "🚀 Features"
+      order: 0
+      filters:
+        include:
+          - "^feat:"
+    - title: "🐛 Bug Fixes"
+      order: 1
+      filters:
+        include:
+          - "^fix:"
+
   filters:
     exclude:
       - "^docs:"
       - "^test:"
+      - "^refactor:"
+      - "^style:"
+      - "^chore:"
+      - "^ci:"
 
 release:
   footer: >-
