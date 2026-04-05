@@ -40,18 +40,6 @@ archives:
 
 changelog:
   sort: asc
-  groups:
-    - title: "🚀 Features"
-      order: 0
-      filters:
-        include:
-          - "^feat:"
-    - title: "🐛 Bug Fixes"
-      order: 1
-      filters:
-        include:
-          - "^fix:"
-
   filters:
     exclude:
       - "^docs:"
@@ -60,6 +48,15 @@ changelog:
       - "^style:"
       - "^chore:"
       - "^ci:"
+  groups:
+    - title: "🚀 Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: "🐛 Bug Fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Others
+      order: 999
 
 release:
   footer: >-
